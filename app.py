@@ -19,17 +19,19 @@ class Transaccion(BaseModel):
 
 @app.post("/predict")
 def predict(data: Transaccion):
-    X = np.array([[ 
-        data.amount,
-        data.oldbalanceOrg,
-        data.newbalanceOrig,
-        data.oldbalanceDest,
-        data.newbalanceDest,
-        data.step,
-        data.type_bin
-    ]])
+import pandas as pd
 
-    X_scaled = scaler.transform(X)
-    pred = modelo.predict(X_scaled)[0]
+X = pd.DataFrame([{
+    "amount": data.amount,
+    "oldbalanceOrg": data.oldbalanceOrg,
+    "newbalanceOrig": data.newbalanceOrig,
+    "oldbalanceDest": data.oldbalanceDest,
+    "newbalanceDest": data.newbalanceDest,
+    "step": data.step,
+    "type_bin": data.type_bin
+}])
+
+X_scaled = scaler.transform(X)
+
 
     return {"fraude": int(pred)}
